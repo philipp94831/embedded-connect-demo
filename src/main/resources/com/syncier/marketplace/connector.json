@@ -1,0 +1,23 @@
+{
+  "name": "kong-elasticsearch-sink",
+  "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+  "tasks.max": "1",
+  "connection.url": "https://elasticsearch:9243",
+  "connection.username": "username",
+  "connection.password": "password",
+  "behavior.on.malformed.documents": "warn",
+  "errors.deadletterqueue.context.headers.enable": "true",
+  "errors.deadletterqueue.topic.name": "kong-elasticsearch-sink-dead-letters",
+  "errors.tolerance": "all",
+  "topics": "kong-avro",
+  "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+  "key.ignore": "true",
+  "value.converter": "io.confluent.connect.avro.AvroConverter",
+  "value.converter.schema.registry.url": "http://schema-registry:8081",
+  "transforms": "RenameField,TimestampRouter",
+  "transforms.RenameField.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+  "transforms.RenameField.renames": "timestamp:@timestamp,log_name:@log_name",
+  "transforms.TimestampRouter.type": "org.apache.kafka.connect.transforms.TimestampRouter",
+  "transforms.TimestampRouter.topic.format": "fluentd-${timestamp}",
+  "transforms.TimestampRouter.timestamp.format": "YYYYMMDD"
+}
